@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cess's Birthday Surprise 🎉</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+    color: white;
+}
+
+#login, #countdownSection, #gameArea, #finalSurprise {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ff5e7e;
+    color: white;
+    margin-top: 10px;
+}
+
+#countdown {
+    font-size: 3rem;
+    margin: 20px 0;
+}
+
+.gift {
+    width: 60px;
+    height: 60px;
+    background-color: #00ff88;
+    position: absolute;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    user-select: none;
+    transition: transform 0.2s;
+}
+
+.gift:hover {
+    transform: scale(1.2) rotate(10deg);
+}
+
+#score {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.message {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    top: 0;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Password screen -->
+<div id="login" style="display:flex">
+    <h1>Enter Secret Password 🎁</h1>
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="checkPassword()">Unlock Surprise</button>
+</div>
+
+<!-- Countdown before the game -->
+<div id="countdownSection">
+    <h1>Countdown to Your Surprise! 🎉</h1>
+    <div id="countdown">10</div>
+</div>
+
+<!-- Game area -->
+<div id="gameArea" style="display:flex">
+    <h1>Click all the gifts to unlock your surprises! 🎁</h1>
+    <div id="score">Score: 0 / 5</div>
+    <div id="message" class="message"></div>
+</div>
+
+<!-- Final surprise -->
+<div id="finalSurprise">
+    <h1>🎂 Happy Birthday Cess! ❤️</h1>
+    <p>You unlocked all the gifts! Wishing you joy, love, and laughter!</p>
+</div>
+
+<script>
+const password = "Cess2026";
+let score = 0;
+const totalGifts = 5;
+
+// Step 1: Password check
+function checkPassword() {
+    const pass = document.getElementById("password").value;
+    if(pass === password) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("countdownSection").style.display = "flex";
+        startCountdown(10);
+    } else {
+        alert("Wrong password 😅 Try again!");
+    }
+}
+
+// Step 2: Countdown
+function startCountdown(seconds) {
+    let timeLeft = seconds;
+    const countdown = document.getElementById("countdown");
+    const interval = setInterval(() => {
+        countdown.innerText = timeLeft;
+        timeLeft--;
+        if(timeLeft < 0) {
+            clearInterval(interval);
+            document.getElementById("countdownSection").style.display = "none";
+            startGame();
+        }
+    }, 1000);
+}
+
+// Step 3: Game setup
+function startGame() {
+    const gameArea = document.getElementById("gameArea");
+    gameArea.style.display = "flex";
+
+    for(let i=0; i<totalGifts; i++){
+        const gift = document.createElement('div');
+        gift.classList.add('gift');
+        gift.innerText = "🎁";
+        gift.style.top = Math.random()*70 + "vh";
+        gift.style.left = Math.random()*80 + "vw";
+        gift.onclick = () => openGift(gift, i);
+        document.body.appendChild(gift);
+    }
+
+    updateScore();
+}
+
+// Step 4: Open gift
+function openGift(gift, index) {
+    const messages = [
+        "🎉 Surprise! You got a virtual cupcake!",
+        "✨ Sparkles! Wishing you happiness!",
+        "🎈 Balloon surprise! Keep clicking!",
+        "💖 A secret love message just for you!",
+        "🍫 Chocolate treat unlocked!"
+    ];
+    alert(messages[index]);
+    gift.remove();
+    score++;
+    updateScore();
+
+    if(score >= totalGifts){
+        endGame();
+    }
+}
+
+// Step 5: Update score
+function updateScore() {
+    document.getElementById("score").innerText = `Score: ${score} / ${totalGifts}`;
+}
+
+// Step 6: End game
+function endGame() {
+    document.getElementById("gameArea").style.display = "none";
+    document.getElementById("finalSurprise").style.display = "flex";
+    startConfetti(100);
+}
+
+// Step 7: Confetti animation
+function startConfetti(number) {
+    for(let i=0; i<number; i++){
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random()*100 + 'vw';
+        confetti.style.background = `hsl(${Math.random()*360},100%,75%)`;
+        confetti.style.animationDuration = (2 + Math.random()*3) + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => { confetti.remove(); }, 5000);
+    }
+}
+
+// Initialize: show login
+document.getElementById("login").style.display = "flex";
+</script>
+
+</body>
+</html>
